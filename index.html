@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home & Property Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  /* ─── Reset & Base ─── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0c0c0e;
+    --card: #141416;
+    --card-border: #232326;
+    --text-primary: #e8e4df;
+    --text-secondary: #9a9590;
+    --text-faint: #5a5754;
+    --accent: #5B8C5A;
+    --accent-light: #6da36c;
+    --green: #34d399;
+    --red: #f87171;
+    --yellow: #fbbf24;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', 'Fira Code', ui-monospace, monospace;
+  }
+
+  html { font-size: 15px; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Layout ─── */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+  }
+
+  /* ─── Header ─── */
+  .header {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+  .header .subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 0.15rem;
+  }
+  .header .sync-time {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+  }
+
+  /* ─── Cards ─── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-title .accent-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  /* ─── KPI Row ─── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .kpi {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+  }
+  .kpi .kpi-val {
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums lining-nums;
+    line-height: 1.2;
+  }
+  .kpi .kpi-label {
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* ─── Mode Badge ─── */
+  .mode-badge {
+    display: inline-block;
+    padding: 0.1rem 0.4rem;
+    border-radius: 100px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .mode-badge.live { background: rgba(52,211,153,0.15); color: var(--green); }
+  .mode-badge.demo { background: rgba(251,191,36,0.15); color: var(--yellow); }
+
+  /* ─── Table ─── */
+  .mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+  }
+  .mini-table th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--card-border);
+    padding: 0.5rem 0.6rem;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .mini-table td {
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    color: var(--text-primary);
+  }
+  .mini-table tr:last-child td { border-bottom: none; }
+
+  /* ─── Chart Container ─── */
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    margin: 0.75rem 0;
+  }
+  .chart-wrap.tall { height: 260px; }
+  .chart-wrap.medium { height: 200px; }
+
+  /* ─── Placeholder ─── */
+  .placeholder-card {
+    background: var(--card);
+    border: 1px dashed var(--card-border);
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .placeholder-card h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+  }
+  .placeholder-card p {
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* ─── Property Value Hero ─── */
+  .value-hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .value-hero .big-val {
+    font-family: var(--font-mono);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .value-hero .val-details {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-top: 0.35rem;
+  }
+  .value-hero .val-details .gain {
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  .value-source {
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    margin-top: 0.5rem;
+    text-align: right;
+  }
+
+  /* ─── Kanban Board ─── */
+  .kanban {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.75rem;
+  }
+  .kanban-col {
+    min-width: 0;
+  }
+  .kanban-col-header {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .kanban-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+  .kanban-card .card-note {
+    font-size: 0.68rem;
+    color: var(--text-faint);
+    margin-top: 0.2rem;
+  }
+  .kanban-empty {
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    font-style: italic;
+    padding: 0.6rem 0;
+  }
+
+  /* ─── Status Dots ─── */
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    vertical-align: middle;
+  }
+  .status-dot.s-green { background: var(--green); }
+  .status-dot.s-yellow { background: var(--yellow); }
+  .status-dot.s-red { background: var(--red); }
+
+  /* ─── Section Header ─── */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ─── Awaiting Data ─── */
+  .awaiting {
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  /* ─── Two Column Grid ─── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  /* ─── Data Note ─── */
+  .data-note {
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    margin-top: 0.5rem;
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    border-top: 1px solid var(--card-border);
+    margin-top: 1rem;
+    padding-top: 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.72rem;
+    color: var(--text-faint);
+  }
+  footer a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  footer a:hover { color: var(--text-primary); }
+  .footer-links { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+
+  /* ─── Chart Legend Custom ─── */
+  .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin-top: 0.5rem;
+    font-size: 0.72rem;
+  }
+  .chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-secondary);
+  }
+  .chart-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 768px) {
+    html { font-size: 14px; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .kanban { grid-template-columns: 1fr 1fr; }
+    .header { flex-direction: column; align-items: flex-start; }
+    .value-hero .big-val { font-size: 1.7rem; }
+    .mini-table { font-size: 0.7rem; }
+    .mini-table th, .mini-table td { padding: 0.4rem 0.4rem; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 1.25rem 1rem 2rem; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .kanban { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<!-- PASSWORD GATE -->
+<div id="password-overlay" style="
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: #0a0a0a; z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+">
+  <div style="text-align: center; max-width: 360px; padding: 20px;">
+    <div style="font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: #666; margin-bottom: 24px;">Dashboard Access</div>
+    <input id="pw-input" type="password" placeholder="Enter password" autocomplete="off" style="
+      width: 100%; padding: 14px 18px; font-size: 16px;
+      background: #151515; border: 1px solid #333; border-radius: 8px;
+      color: #fff; outline: none; text-align: center;
+      box-sizing: border-box;
+    " />
+    <div id="pw-error" style="color: #ff4444; font-size: 13px; margin-top: 12px; opacity: 0; transition: opacity 0.3s;">Incorrect password</div>
+    <div style="color: #444; font-size: 12px; margin-top: 24px;">Press Enter to continue</div>
+  </div>
+</div>
+<script>
+(function() {
+  var k = 'dashboard_auth', h = 'SmVzc2ljYUxlaWdo';
+  if (sessionStorage.getItem(k) === h) {
+    document.getElementById('password-overlay').style.display = 'none';
+    return;
+  }
+  var inp = document.getElementById('pw-input');
+  var err = document.getElementById('pw-error');
+  inp.focus();
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      if (btoa(inp.value) === h) {
+        sessionStorage.setItem(k, h);
+        document.getElementById('password-overlay').style.display = 'none';
+      } else {
+        err.style.opacity = '1';
+        inp.value = '';
+        inp.style.borderColor = '#ff4444';
+        setTimeout(function() { err.style.opacity = '0'; inp.style.borderColor = '#333'; }, 2000);
+      }
+    }
+  });
+})();
+</script>
+<!-- END PASSWORD GATE -->
+
+<div class="container" id="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>Home & Property</h1>
+      <div class="subtitle">2685 Cherry Circle, Emmett, ID</div>
+    </div>
+    <div class="sync-time" id="syncTime">Loading...</div>
+  </div>
+
+  <!-- Property Value Card -->
+  <div class="card" id="valueCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Property Value
+        <span class="mode-badge demo">DEMO</span>
+      </div>
+    </div>
+    <div id="valueContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Home Equity Position -->
+  <div class="card" id="equityCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Home Equity Position
+        <span class="mode-badge demo">DEMO</span>
+      </div>
+    </div>
+    <div id="equityContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Projects Board -->
+  <div class="card" id="projectsCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Projects Board
+        <span class="mode-badge demo">DEMO</span>
+      </div>
+    </div>
+    <div id="projectsContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Maintenance Schedule -->
+  <div class="card" id="maintenanceCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Maintenance Schedule
+        <span class="mode-badge demo">DEMO</span>
+      </div>
+    </div>
+    <div id="maintenanceContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Sprinkler System Placeholder -->
+  <div class="placeholder-card">
+    <h3>Sprinkler System</h3>
+    <p>Awaiting Rachio integration. WiFi controller upgrade planned.</p>
+  </div>
+
+  <!-- Network Status Placeholder -->
+  <div class="placeholder-card">
+    <h3>Network Status</h3>
+    <p>eero integration — future release</p>
+  </div>
+
+  <!-- Property Tax -->
+  <div class="card" id="taxCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Property Tax
+        <span class="mode-badge demo">DEMO</span>
+      </div>
+    </div>
+    <div id="taxContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Monthly Expenses -->
+  <div class="card" id="expenseCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Monthly Expenses
+        <span class="mode-badge demo">DEMO</span>
+      </div>
+    </div>
+    <div id="expenseContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Utility Cost Tracker -->
+  <div class="card" id="utilityCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Utility Cost Tracker
+        <span class="mode-badge demo">DEMO</span>
+      </div>
+    </div>
+    <div id="utilityContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Insurance Overview -->
+  <div class="card" id="insuranceCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Insurance Overview
+        <span class="mode-badge demo">DEMO</span>
+      </div>
+    </div>
+    <div id="insuranceContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Contractor Contacts -->
+  <div class="card" id="contractorCard">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="accent-dot" style="background:var(--accent)"></span>
+        Contractor Contacts
+      </div>
+    </div>
+    <div id="contractorContent"><div class="awaiting">Loading data...</div></div>
+  </div>
+
+  <!-- Document Vault Placeholder -->
+  <div class="placeholder-card">
+    <h3>Warranty & Document Vault</h3>
+    <p>Connected to Family Scans in Notion · Coming Soon</p>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="../master-dashboard/index.html" target="_blank">Portfolio Dashboard</a>
+    </div>
+    <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">Created with Perplexity Computer</a>
+  </footer>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ─── Utilities ───
+  const $ = (sel) => document.querySelector(sel);
+  const fmt = (n) => {
+    if (n == null) return '—';
+    if (typeof n === 'number') {
+      if (n >= 1000) return n.toLocaleString('en-US');
+      return n.toString();
+    }
+    return n;
+  };
+  const fmtUSD = (n) => {
+    if (n == null) return '—';
+    if (n >= 1000) return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return '$' + n.toFixed(n % 1 === 0 ? 0 : 2);
+  };
+  const fmtPct = (n) => {
+    if (n == null || n === 0) return '0%';
+    return n.toFixed(1) + '%';
+  };
+
+  // ─── Chart defaults ───
+  Chart.defaults.color = '#9a9590';
+  Chart.defaults.borderColor = '#232326';
+  Chart.defaults.font.family = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
+  Chart.defaults.font.size = 11;
+
+  // ─── Data ───
+  let DATA = null;
+
+  // ─── Load Data ───
+  async function loadData() {
+    try {
+      const resp = await fetch('data.json');
+      DATA = await resp.json();
+      render();
+    } catch (e) {
+      console.warn('Could not load data.json:', e);
+      $('#syncTime').textContent = 'Data not available';
+    }
+  }
+
+  // ─── Render All ───
+  function render() {
+    if (!DATA) return;
+
+    // Sync time
+    const synced = DATA._meta?.last_synced;
+    if (synced) {
+      const d = new Date(synced);
+      $('#syncTime').textContent = 'Last synced: ' + d.toLocaleString('en-US', {
+        month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true
+      });
+    }
+
+    renderValue();
+    renderEquity();
+    renderProjects();
+    renderMaintenance();
+    renderTax();
+    renderExpenses();
+    renderUtilities();
+    renderInsurance();
+    renderContractors();
+  }
+
+  // ─── Property Value ───
+  function renderValue() {
+    const v = DATA.valuation;
+    if (!v) return;
+    const el = $('#valueContent');
+
+    el.innerHTML = `
+      <div class="value-hero">
+        <div>
+          <div class="big-val">${fmtUSD(v.current_estimate)}</div>
+          <div class="val-details">
+            Purchased: ${fmtUSD(v.purchase_price)} (Sept 2020)<br>
+            Total Equity Gain: <span class="gain">+${fmtUSD(v.equity_gain)} (+${v.equity_gain_pct}%)</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-wrap tall"><canvas id="valueTrendChart"></canvas></div>
+      <div class="value-source">Source: ${v.source} · DEMO DATA</div>
+    `;
+
+    // Draw line chart
+    const ctx = document.getElementById('valueTrendChart');
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: v.trend_labels,
+        datasets: [{
+          data: v.trend_values,
+          borderColor: '#5B8C5A',
+          backgroundColor: 'rgba(91,140,90,0.08)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#5B8C5A',
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1c1c1e',
+            titleColor: '#e8e4df',
+            bodyColor: '#9a9590',
+            borderColor: '#232326',
+            borderWidth: 1,
+            cornerRadius: 6,
+            padding: 10,
+            callbacks: {
+              label: function(ctx) { return '$' + ctx.parsed.y.toLocaleString(); }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { maxTicksLimit: 8, font: { size: 10 } }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.03)' },
+            ticks: {
+              font: { size: 10 },
+              callback: function(val) { return '$' + (val / 1000) + 'K'; }
+            }
+          }
+        },
+        interaction: { intersect: false, mode: 'index' }
+      }
+    });
+  }
+
+  // ─── Home Equity ───
+  function renderEquity() {
+    const eq = DATA.equity;
+    if (!eq) return;
+    const el = $('#equityContent');
+
+    el.innerHTML = `
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-val" style="color:var(--accent)">${fmtUSD(eq.estimated_value)}</div><div class="kpi-label">Estimated Value</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--text-primary)">${fmtUSD(eq.mortgage_balance)}</div><div class="kpi-label">Mortgage Balance</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--green)">${fmtUSD(eq.home_equity)}</div><div class="kpi-label">Home Equity</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--green)">${fmtPct(eq.equity_pct)}</div><div class="kpi-label">Equity %</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--text-primary)">${fmtPct(eq.ltv_ratio)}</div><div class="kpi-label">LTV Ratio</div></div>
+      </div>
+    `;
+  }
+
+  // ─── Projects Board ───
+  function renderProjects() {
+    const p = DATA.projects;
+    if (!p) return;
+    const el = $('#projectsContent');
+
+    function renderCards(items) {
+      if (!items || items.length === 0) return '<div class="kanban-empty">No items</div>';
+      return items.map(item => `
+        <div class="kanban-card">
+          ${item.title}
+          ${item.cost ? '<div class="card-note">' + item.cost + '</div>' : ''}
+          ${item.note ? '<div class="card-note">' + item.note + '</div>' : ''}
+        </div>
+      `).join('');
+    }
+
+    el.innerHTML = `
+      <div class="kanban">
+        <div class="kanban-col">
+          <div class="kanban-col-header">Ideas</div>
+          ${renderCards(p.ideas)}
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">Considering</div>
+          ${renderCards(p.considering)}
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">Committed</div>
+          ${renderCards(p.committed)}
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">In Progress</div>
+          <div class="kanban-empty">No active projects</div>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">Major Projects</div>
+          <div class="kanban-empty">No major projects</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Maintenance Schedule ───
+  function renderMaintenance() {
+    const items = DATA.maintenance;
+    if (!items) return;
+    const el = $('#maintenanceContent');
+
+    const statusMap = {
+      green: 's-green',
+      yellow: 's-yellow',
+      red: 's-red'
+    };
+
+    let rows = items.map(m => `
+      <tr>
+        <td style="font-weight:500;">${m.item}</td>
+        <td style="color:var(--text-secondary)">${m.category}</td>
+        <td style="font-family:var(--font-mono);font-size:0.7rem;">${m.last_done}</td>
+        <td style="font-family:var(--font-mono);font-size:0.7rem;">${m.next_due}</td>
+        <td><span class="status-dot ${statusMap[m.status] || 's-green'}"></span></td>
+      </tr>
+    `).join('');
+
+    el.innerHTML = `
+      <div style="overflow-x:auto;">
+      <table class="mini-table">
+        <thead>
+          <tr><th>Item</th><th>Category</th><th>Last Done</th><th>Next Due</th><th>Status</th></tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      </div>
+    `;
+  }
+
+  // ─── Property Tax ───
+  function renderTax() {
+    const t = DATA.property_tax;
+    if (!t) return;
+    const el = $('#taxContent');
+
+    el.innerHTML = `
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-val" style="color:var(--accent)">${fmtUSD(t.annual_tax)}</div><div class="kpi-label">Annual Tax</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--text-primary)">${fmtUSD(t.assessed_value)}</div><div class="kpi-label">Tax Assessed Value</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--text-primary)">${t.tax_rate}%</div><div class="kpi-label">Tax Rate</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--text-primary)">${t.next_payment}</div><div class="kpi-label">Next Payment</div></div>
+      </div>
+      <div class="data-note">${t.county} · ${t.note}</div>
+    `;
+  }
+
+  // ─── Monthly Expenses ───
+  function renderExpenses() {
+    const ex = DATA.expenses;
+    if (!ex) return;
+    const el = $('#expenseContent');
+
+    el.innerHTML = `
+      <div class="chart-wrap tall"><canvas id="expenseChart"></canvas></div>
+      <div class="data-note">YTD Total: ${fmtUSD(ex.ytd_total)} · DEMO DATA</div>
+      <div class="data-note" style="margin-top:0.25rem;">Awaiting Mercury Personal connection for live data</div>
+    `;
+
+    const ctx = document.getElementById('expenseChart');
+    if (!ctx) return;
+
+    const colors = {
+      mortgage: '#5B8C5A',
+      utilities: '#7ab87a',
+      insurance: '#3d6b3c',
+      maintenance: '#a4c4a3',
+      other: '#2d4f2c'
+    };
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ex.months,
+        datasets: [
+          { label: 'Mortgage', data: ex.mortgage, backgroundColor: colors.mortgage },
+          { label: 'Utilities', data: ex.utilities, backgroundColor: colors.utilities },
+          { label: 'Insurance', data: ex.insurance, backgroundColor: colors.insurance },
+          { label: 'Maintenance', data: ex.maintenance, backgroundColor: colors.maintenance },
+          { label: 'Other', data: ex.other, backgroundColor: colors.other },
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              boxWidth: 10,
+              boxHeight: 10,
+              padding: 12,
+              font: { size: 10 },
+              usePointStyle: true,
+              pointStyle: 'rect'
+            }
+          },
+          tooltip: {
+            backgroundColor: '#1c1c1e',
+            titleColor: '#e8e4df',
+            bodyColor: '#9a9590',
+            borderColor: '#232326',
+            borderWidth: 1,
+            cornerRadius: 6,
+            padding: 10,
+            callbacks: {
+              label: function(ctx) { return ctx.dataset.label + ': $' + ctx.parsed.y.toLocaleString(); }
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { display: false },
+            ticks: { font: { size: 10 } }
+          },
+          y: {
+            stacked: true,
+            grid: { color: 'rgba(255,255,255,0.03)' },
+            ticks: {
+              font: { size: 10 },
+              callback: function(val) { return '$' + (val / 1000).toFixed(1) + 'K'; }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // ─── Utility Cost Tracker ───
+  function renderUtilities() {
+    const u = DATA.utilities;
+    if (!u) return;
+    const el = $('#utilityContent');
+
+    el.innerHTML = `
+      <div class="chart-wrap tall"><canvas id="utilityChart"></canvas></div>
+    `;
+
+    const ctx = document.getElementById('utilityChart');
+    if (!ctx) return;
+
+    const lineColors = {
+      electricity: '#f59e0b',
+      water: '#3b82f6',
+      gas: '#ef4444',
+      internet: '#8b5cf6'
+    };
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: u.months,
+        datasets: [
+          {
+            label: 'Electricity (Idaho Power)',
+            data: u.electricity,
+            borderColor: lineColors.electricity,
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.35,
+            pointRadius: 2,
+            pointHoverRadius: 5,
+          },
+          {
+            label: 'Water',
+            data: u.water,
+            borderColor: lineColors.water,
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.35,
+            pointRadius: 2,
+            pointHoverRadius: 5,
+          },
+          {
+            label: 'Gas',
+            data: u.gas,
+            borderColor: lineColors.gas,
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            tension: 0.35,
+            pointRadius: 2,
+            pointHoverRadius: 5,
+          },
+          {
+            label: 'Internet',
+            data: u.internet,
+            borderColor: lineColors.internet,
+            backgroundColor: 'transparent',
+            borderWidth: 2,
+            borderDash: [5, 3],
+            tension: 0,
+            pointRadius: 0,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              boxWidth: 14,
+              boxHeight: 2,
+              padding: 12,
+              font: { size: 10 },
+              usePointStyle: false,
+            }
+          },
+          tooltip: {
+            backgroundColor: '#1c1c1e',
+            titleColor: '#e8e4df',
+            bodyColor: '#9a9590',
+            borderColor: '#232326',
+            borderWidth: 1,
+            cornerRadius: 6,
+            padding: 10,
+            callbacks: {
+              label: function(ctx) { return ctx.dataset.label + ': $' + ctx.parsed.y; }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 10 } }
+          },
+          y: {
+            grid: { color: 'rgba(255,255,255,0.03)' },
+            ticks: {
+              font: { size: 10 },
+              callback: function(val) { return '$' + val; }
+            }
+          }
+        },
+        interaction: { intersect: false, mode: 'index' }
+      }
+    });
+  }
+
+  // ─── Insurance Overview ───
+  function renderInsurance() {
+    const ins = DATA.insurance;
+    if (!ins) return;
+    const el = $('#insuranceContent');
+
+    el.innerHTML = `
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-val" style="color:var(--accent)">${fmtUSD(ins.annual_premium)}</div><div class="kpi-label">Annual Premium</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--text-primary)">${fmtUSD(ins.coverage)}</div><div class="kpi-label">Coverage</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--text-primary)">${fmtUSD(ins.deductible)}</div><div class="kpi-label">Deductible</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--text-primary)">${ins.policy_expiration}</div><div class="kpi-label">Policy Expiration</div></div>
+      </div>
+      <div class="data-note">Agent: ${ins.agent} · Provider: ${ins.provider}</div>
+    `;
+  }
+
+  // ─── Contractor Contacts ───
+  function renderContractors() {
+    const contractors = DATA.contractors;
+    if (!contractors) return;
+    const el = $('#contractorContent');
+
+    let rows = contractors.map(c => `
+      <tr>
+        <td style="font-weight:500;">${c.name}</td>
+        <td style="color:var(--text-secondary)">${c.specialty}</td>
+        <td style="font-family:var(--font-mono);font-size:0.7rem;">${c.phone}</td>
+        <td style="color:var(--text-secondary)">${c.status}</td>
+      </tr>
+    `).join('');
+
+    el.innerHTML = `
+      <table class="mini-table">
+        <thead>
+          <tr><th>Name</th><th>Specialty</th><th>Phone</th><th>Status</th></tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+  }
+
+  // ─── Init ───
+  loadData();
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+{
+  "_meta": {
+    "last_synced": "2026-03-23T15:19:00-06:00",
+    "dashboard": "home_property"
+  },
+  "property": {
+    "address": "2685 Cherry Circle, Emmett, ID",
+    "sqft": 3880,
+    "acreage": 3.4,
+    "zone": "6b",
+    "purchase_date": "2020-09-15",
+    "purchase_price": 800000
+  },
+  "valuation": {
+    "current_estimate": 1027700,
+    "purchase_price": 800000,
+    "equity_gain": 227700,
+    "equity_gain_pct": 28.5,
+    "source": "Zillow Zestimate",
+    "trend_labels": [
+      "Sep 20","Dec 20","Mar 21","Jun 21","Sep 21","Dec 21",
+      "Mar 22","Jun 22","Sep 22","Dec 22","Mar 23","Jun 23",
+      "Sep 23","Dec 23","Mar 24","Jun 24","Sep 24","Dec 24",
+      "Mar 25","Jun 25","Sep 25","Dec 25","Mar 26"
+    ],
+    "trend_values": [
+      800000, 808000, 820000, 842000, 875000, 910000,
+      935000, 968000, 985000, 972000, 958000, 965000,
+      978000, 985000, 992000, 1005000, 1012000, 1018000,
+      1010000, 1015000, 1022000, 1030000, 1027700
+    ]
+  },
+  "equity": {
+    "estimated_value": 1027700,
+    "mortgage_balance": 612400,
+    "home_equity": 415300,
+    "equity_pct": 40.4,
+    "ltv_ratio": 59.6
+  },
+  "projects": {
+    "ideas": [
+      { "title": "Smart home automation" },
+      { "title": "Backyard fire pit" }
+    ],
+    "considering": [
+      { "title": "Front landscaping", "note": "Meeting with Seth" }
+    ],
+    "committed": [
+      { "title": "Driveway replacement", "cost": "$20,000", "note": "Working with Bob" }
+    ],
+    "in_progress": [],
+    "major_projects": []
+  },
+  "maintenance": [
+    { "item": "HVAC Filter Change", "category": "HVAC", "last_done": "Feb 2026", "next_due": "Apr 2026", "status": "green" },
+    { "item": "Furnace Inspection", "category": "HVAC", "last_done": "Oct 2025", "next_due": "Oct 2026", "status": "green" },
+    { "item": "Gutter Cleaning", "category": "Exterior", "last_done": "Nov 2025", "next_due": "Apr 2026", "status": "yellow" },
+    { "item": "Irrigation Spring Startup", "category": "Landscape", "last_done": "—", "next_due": "Mar 2026", "status": "red" },
+    { "item": "Pest Inspection", "category": "Interior", "last_done": "Jun 2025", "next_due": "Jun 2026", "status": "green" },
+    { "item": "Roof Inspection", "category": "Exterior", "last_done": "Sep 2024", "next_due": "Sep 2026", "status": "green" },
+    { "item": "Water Heater Flush", "category": "Plumbing", "last_done": "Jan 2026", "next_due": "Jul 2026", "status": "green" },
+    { "item": "Smoke/CO Detector Test", "category": "Safety", "last_done": "Jan 2026", "next_due": "Jul 2026", "status": "green" },
+    { "item": "Chimney Sweep", "category": "Interior", "last_done": "Oct 2025", "next_due": "Oct 2026", "status": "green" },
+    { "item": "Septic Pump", "category": "Plumbing", "last_done": "Mar 2024", "next_due": "Mar 2027", "status": "green" },
+    { "item": "Tree/Brush Trimming", "category": "Landscape", "last_done": "Aug 2025", "next_due": "May 2026", "status": "yellow" },
+    { "item": "Exterior Paint Check", "category": "Exterior", "last_done": "—", "next_due": "Jun 2026", "status": "green" }
+  ],
+  "property_tax": {
+    "annual_tax": 4522,
+    "assessed_value": 892000,
+    "tax_rate": 0.44,
+    "next_payment": "Jun 20, 2026",
+    "county": "Gem County, Idaho",
+    "note": "Two installments: June 20 & December 20"
+  },
+  "expenses": {
+    "months": ["Oct 2025", "Nov 2025", "Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026"],
+    "mortgage":    [2100, 2100, 2100, 2100, 2100, 2100],
+    "utilities":   [340, 360, 380, 370, 350, 330],
+    "insurance":   [180, 180, 180, 180, 180, 180],
+    "maintenance": [150, 800, 200, 450, 100, 300],
+    "other":       [80, 120, 200, 50, 100, 150],
+    "ytd_total": 18420
+  },
+  "utilities": {
+    "months": ["Apr 25","May 25","Jun 25","Jul 25","Aug 25","Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26"],
+    "electricity": [140, 155, 195, 280, 265, 190, 145, 160, 210, 240, 200, 165],
+    "water":       [42, 55, 72, 80, 78, 65, 45, 40, 42, 44, 43, 48],
+    "gas":         [85, 55, 32, 30, 30, 45, 75, 95, 120, 115, 90, 70],
+    "internet":    [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80]
+  },
+  "insurance": {
+    "annual_premium": 2160,
+    "coverage": 850000,
+    "deductible": 2500,
+    "policy_expiration": "Jan 15, 2027",
+    "agent": "TBD",
+    "provider": "TBD"
+  },
+  "contractors": [
+    { "name": "Bob", "specialty": "Driveway/Concrete", "phone": "—", "status": "Active Project" },
+    { "name": "Seth", "specialty": "Landscaping", "phone": "—", "status": "Consultation" },
+    { "name": "Eric Melear", "specialty": "Property Maintenance", "phone": "—", "status": "Family" },
+    { "name": "(TBD)", "specialty": "Plumber", "phone": "—", "status": "—" },
+    { "name": "(TBD)", "specialty": "Electrician", "phone": "—", "status": "—" },
+    { "name": "(TBD)", "specialty": "HVAC", "phone": "—", "status": "—" }
+  ]
+}
