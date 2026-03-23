@@ -410,18 +410,13 @@
 </div>
 <script>
 (function() {
-  var k = 'dashboard_auth', h = 'SmVzc2ljYUxlaWdo';
-  if (sessionStorage.getItem(k) === h) {
-    document.getElementById('password-overlay').style.display = 'none';
-    return;
-  }
+  var h = 'SmVzc2ljYUxlaWdo';
   var inp = document.getElementById('pw-input');
   var err = document.getElementById('pw-error');
   inp.focus();
   inp.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       if (btoa(inp.value) === h) {
-        sessionStorage.setItem(k, h);
         document.getElementById('password-overlay').style.display = 'none';
       } else {
         err.style.opacity = '1';
